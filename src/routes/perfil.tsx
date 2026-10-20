@@ -80,7 +80,7 @@ function Perfil() {
           <h1 className="text-3xl font-extrabold">{tier.label} · {tier.title}</h1>
           <p className="mt-1 text-sm">{prog?.xp ?? 0} XP · {prog?.valid_sessions ?? 0} sessões válidas · {prog?.active_days ?? 0} dias ativos</p>
           <Progress value={pct} className="mt-3 bg-primary-foreground/20" />
-          <p className="mt-1 text-xs opacity-80">{next ? `Próximo nível: ${TIERS[next.tier].label} (${next.min_xp} XP e critérios de regularidade)` : "Nível máximo"}</p>
+          <p className="mt-1 text-xs opacity-80">{next ? `Próximo nível: ${TIERS[next.tier]?.label} (${next.min_xp} XP e critérios de regularidade)` : "Nível máximo"}</p>
           <p className="mt-1 text-xs opacity-80">Primeira contribuição: {prog?.first_contribution_at ? new Date(prog.first_contribution_at).toLocaleDateString("pt-BR") : "—"} · Membro desde {new Date(user.created_at).toLocaleDateString("pt-BR")}</p>
         </section>
 
@@ -117,7 +117,8 @@ function Perfil() {
           <Button
             onClick={async () => {
               const { error } = await supabase.from("profiles").update({ nickname: nick.trim() || null, show_on_map: show }).eq("id", user.id);
-              if (error) toast.error(error.message); else toast.success("Salvo.");
+              if (error) { toast.error(error.message); return; }
+              toast.success("Salvo.");
             }}
           >Salvar</Button>
         </section>
@@ -129,7 +130,7 @@ function Perfil() {
             onClick={async () => {
               if (!confirm("Excluir seus dados pessoais e progresso? Contribuições agregadas serão anonimizadas.")) return;
               const { error } = await supabase.rpc("prepare_account_deletion");
-              if (error) return toast.error(error.message);
+              if (error) { toast.error(error.message); return; }
               await supabase.auth.signOut();
               toast.success("Dados pessoais removidos. A remoção final do login é processada pela equipe.");
               nav({ to: "/" });

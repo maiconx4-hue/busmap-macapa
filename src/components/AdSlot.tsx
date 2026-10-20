@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 
 // Fill these with your Google AdSense publisher and ad-unit IDs to serve real ads.
-const ADSENSE_CLIENT = import.meta.env.VITE_ADSENSE_CLIENT as string | undefined; // ex.: ca-pub-XXXXXXXX
-const ADSENSE_SLOT = import.meta.env.VITE_ADSENSE_SLOT as string | undefined;
+const ADSENSE_CLIENT = import.meta.env["VITE_ADSENSE_CLIENT"] as string | undefined; // ex.: ca-pub-XXXXXXXX
+const ADSENSE_SLOT = import.meta.env["VITE_ADSENSE_SLOT"] as string | undefined;
 
 /** Discreet fixed ad strip at the bottom of the screen (mobile only). */
 export function AdSlot() {

@@ -137,6 +137,7 @@ function MapPage() {
       else toast(`Sessão encerrada sem pontuação: ${r.reason ?? ""}`);
       sharing.clearResult();
     }
+    return undefined;
   }, [sharing.lastResult]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const locateMe = () => {
@@ -325,7 +326,7 @@ function MapFallback() {
   );
 }
 
-function Stats({ routes, active }: { routes?: number; active: number }) {
+function Stats({ routes, active }: { routes: number | undefined; active: number }) {
   return (
     <div className="flex gap-4 text-left">
       <div>
@@ -488,11 +489,11 @@ function FreshBadge({ f, label }: { f: string; label: string }) {
   );
 }
 
-function PositionDetail(props: { p: LivePosition; route?: RouteRow; now: number; timeoutS: number; onClose: () => void }) {
+function PositionDetail(props: { p: LivePosition; route: RouteRow | undefined; now: number; timeoutS: number; onClose: () => void }) {
   const { p } = props;
   const f = freshnessOf(p.updated_at, props.now, props.timeoutS);
   const sig = signalLabel(p.accuracy);
-  const tier = TIERS[p.tier] ?? TIERS.none;
+  const tier = (TIERS[p.tier] ?? TIERS.none);
   return (
     <div>
       <div className="mb-3 flex items-start justify-between">

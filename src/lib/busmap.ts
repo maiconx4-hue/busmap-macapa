@@ -37,7 +37,8 @@ export type LivePosition = {
   nickname: string | null;
 };
 
-export const TIERS: Record<string, { label: string; title: string; short: string }> = {
+type Tier = { label: string; title: string; short: string };
+export const TIERS: Record<string, Tier> & { none: Tier } = {
   none: { label: "Sem medalha", title: "Novato", short: "–" },
   bronze: { label: "Bronze", title: "Iniciante", short: "B" },
   silver: { label: "Prata", title: "Colaborador", short: "P" },
@@ -57,7 +58,7 @@ export function haversine(a: LatLng, b: LatLng): number {
 
 export function polylineLength(points: LatLng[]): number {
   let total = 0;
-  for (let i = 1; i < points.length; i++) total += haversine(points[i - 1], points[i]);
+  for (let i = 1; i < points.length; i++) total += haversine(points[i - 1]!, points[i]!);
   return total;
 }
 
@@ -132,7 +133,7 @@ export const ERROR_MESSAGES: Record<string, string> = {
 
 export function friendlyError(e: unknown): string {
   const msg = e instanceof Error ? e.message : typeof e === "object" && e && "message" in e ? String((e as { message: unknown }).message) : String(e);
-  for (const k of Object.keys(ERROR_MESSAGES)) if (msg.includes(k)) return ERROR_MESSAGES[k];
+  for (const k of Object.keys(ERROR_MESSAGES)) if (msg.includes(k)) return ERROR_MESSAGES[k]!;
   if (/fetch|network/i.test(msg)) return "Sem conexão com o servidor. Verifique sua internet.";
   return msg;
 }
