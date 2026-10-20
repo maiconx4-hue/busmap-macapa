@@ -141,7 +141,10 @@ function MapPage() {
   }, [sharing.lastResult]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const locateMe = () => {
-    if (!("geolocation" in navigator)) return toast.error("Seu navegador não oferece localização.");
+    if (!("geolocation" in navigator)) {
+      toast.error("Seu navegador não oferece localização.");
+      return;
+    }
     navigator.geolocation.getCurrentPosition(
       (p) => {
         const at: [number, number] = [p.coords.latitude, p.coords.longitude];
