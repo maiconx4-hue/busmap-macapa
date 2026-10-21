@@ -4,8 +4,8 @@ import type { LatLng } from "@/lib/busmap";
 export const coordinateSchema = z.tuple([z.number().finite().min(-90).max(90), z.number().finite().min(-180).max(180)]);
 export const routeDraftSchema = z.object({
   id: z.string().uuid().optional(),
-  name: z.string().trim().min(1, "Informe o nome da linha.").max(120),
-  code: z.string().trim().min(1, "Informe o código.").max(30),
+  name: z.string().trim().min(2, "Informe um nome com pelo menos dois caracteres.").max(120),
+  code: z.string().trim().min(1, "Informe o código.").max(20),
   description: z.string().max(2000),
   color: z.string().regex(/^#[0-9a-f]{6}$/i),
   direction: z.enum(["ida", "volta", "circular"]),

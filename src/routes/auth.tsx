@@ -14,6 +14,8 @@ export const Route = createFileRoute("/auth")({
       { name: "description", content: "Crie uma conta opcional para guardar medalhas e progresso." },
       { property: "og:title", content: "Entrar — BusMap Macapá" },
       { property: "og:description", content: "Conta opcional para colaboradores do BusMap Macapá." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: AuthPage,

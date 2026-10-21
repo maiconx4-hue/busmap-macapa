@@ -184,4 +184,5 @@
 .bm-vertex { width: 14px; height: 14px; border-radius: 999px; background: var(--card); border: 3px solid var(--primary); }
 .bm-vertex.end { border-color: var(--destructive); }
 .bm-vertex.start { border-color: var(--success); }
+.bm-endpoint { display: block; background: var(--primary); color: var(--primary-foreground); border-radius: 4px; text-align: center; font: 600 11px/22px var(--font-sans); }
 .leaflet-container { font-family: var(--font-sans); background: var(--muted); }

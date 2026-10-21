@@ -1,8 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { createFileRoute } from "@tanstack/react-router";
 import { AppHeader } from "@/components/AppHeader";
 import { useAuth } from "@/hooks/use-auth";
+import { RouteEditor } from "@/components/admin/RouteEditor";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -11,6 +10,8 @@ export const Route = createFileRoute("/_authenticated/admin")({
       { name: "description", content: "Área administrativa privada." },
       { property: "og:title", content: "Administração — BusMap Macapá" },
       { property: "og:description", content: "Área privada." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -18,31 +19,11 @@ export const Route = createFileRoute("/_authenticated/admin")({
 });
 
 function Admin() {
-  const { user, isAdmin, loading } = useAuth();
-  const [stats, setStats] = useState<Record<string, number> | null>(null);
-  useEffect(() => {
-    if (isAdmin) void supabase.rpc("admin_stats").then(({ data }) => setStats(data as Record<string, number>));
-  }, [isAdmin]);
+  const { isAdmin, loading } = useAuth();
   return (
     <div className="min-h-screen">
       <AppHeader />
-      <main className="mx-auto max-w-3xl p-4">
-        {loading ? null : !user ? (
-          <p>Acesso restrito. <Link to="/auth" className="text-primary underline">Entrar</Link></p>
-        ) : !isAdmin ? (
-          <p>Acesso não autorizado.</p>
-        ) : (
-          <>
-            <h1 className="mb-4 text-2xl font-extrabold">Painel administrativo</h1>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-              {stats && Object.entries(stats).map(([k, v]) => (
-                <div key={k} className="rounded-xl bg-muted p-3"><div className="text-2xl font-bold">{v}</div><div className="text-xs text-muted-foreground">{k}</div></div>
-              ))}
-            </div>
-            <p className="mt-6 text-sm text-muted-foreground">O editor de rotas (origem/destino e desenho manual) é a próxima etapa.</p>
-          </>
-        )}
-      </main>
+      {loading ? <p className="p-6">Verificando acesso…</p> : isAdmin ? <RouteEditor /> : <main className="p-6"><h1 className="text-xl font-bold">Acesso não autorizado.</h1></main>}
     </div>
   );
 }

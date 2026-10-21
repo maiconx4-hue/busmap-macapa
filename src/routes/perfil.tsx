@@ -17,6 +17,8 @@ export const Route = createFileRoute("/perfil")({
       { name: "description", content: "Nível, medalhas e contribuições." },
       { property: "og:title", content: "Meu perfil — BusMap Macapá" },
       { property: "og:description", content: "Seu progresso como colaborador." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Perfil,
