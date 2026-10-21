@@ -3,16 +3,12 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { coordinateSchema, routeDraftSchema } from "@/lib/route-editor";
 import { polylineLength, type LatLng } from "@/lib/busmap";
-
-async function assertAdmin(client: { rpc: (name: "is_admin") => PromiseLike<{ data: unknown; error: unknown }> }) {
-  const { data, error } = await client.rpc("is_admin");
-  if (error || data !== true) throw new Error("Acesso não autorizado.");
-}
+import { assertRouteAdmin } from "@/lib/route-access";
 
 export const listAdminRoutes = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    await assertAdmin(context.supabase);
+    await assertRouteAdmin(context.supabase);
     const { data, error } = await context.supabase.from("routes").select("*").order("code");
     if (error) throw new Error("Não foi possível carregar as rotas.");
     return data;
@@ -22,7 +18,7 @@ export const saveAdminRoute = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => routeDraftSchema.parse(input))
   .handler(async ({ data, context }) => {
-    await assertAdmin(context.supabase);
+    await assertRouteAdmin(context.supabase);
     const { id, ...draft } = data;
     const first = draft.geometry[0]; const last = draft.geometry.at(-1);
     if (!first || !last) throw new Error("Adicione pelo menos dois pontos.");
@@ -40,7 +36,7 @@ export const deleteAdminRoute = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    await assertAdmin(context.supabase);
+    await assertRouteAdmin(context.supabase);
     const { error, data: removed } = await context.supabase.from("routes").delete().eq("id", data.id).select("id");
     if (error || !removed?.length) throw new Error("Não foi possível excluir a rota.");
     return { ok: true };
@@ -50,7 +46,7 @@ export const calculateAdminRoute = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ origin: coordinateSchema, destination: coordinateSchema }).parse(input))
   .handler(async ({ data, context }) => {
-    await assertAdmin(context.supabase);
+    await assertRouteAdmin(context.supabase);
     // Only an operator-configured endpoint is accepted, never a URL supplied by a caller.
     const base = process.env["OSRM_BASE_URL"] || "https://router.project-osrm.org";
     const endpoint = new URL(base);
