@@ -1,0 +1,3 @@
+- [ ] Implementar editor de rotas com cálculo OSRM e desenho manual.
+- [ ] Proteger operações administrativas e manter rascunhos privados.
+- [ ] Verificar edição, salvamento, prévia e publicação.
