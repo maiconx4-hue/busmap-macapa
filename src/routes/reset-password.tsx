@@ -12,6 +12,8 @@ export const Route = createFileRoute("/reset-password")({
       { name: "description", content: "Defina uma nova senha." },
       { property: "og:title", content: "Nova senha — BusMap Macapá" },
       { property: "og:description", content: "Recuperação de acesso." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: () => {

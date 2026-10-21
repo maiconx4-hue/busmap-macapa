@@ -36,6 +36,8 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:title", content: "BusMap Macapá — Ônibus e rotas em tempo real" },
       { property: "og:description", content: "Mapa colaborativo das linhas de ônibus de Macapá, AP." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: MapPage,
@@ -79,6 +81,14 @@ function MapPage() {
 
   // Realtime
   useEffect(() => {
+    // RLS suppresses unpublishing events for public viewers; refresh the authoritative public list.
+    let alive = true;
+    const refreshRoutes = async () => {
+      const { data, error } = await supabase.from("routes").select("*").eq("published", true).eq("active", true).order("code");
+      if (alive && !error) setRoutes((data ?? []) as unknown as RouteRow[]);
+    };
+    const interval = window.setInterval(refreshRoutes, 15000);
+    window.addEventListener("focus", refreshRoutes);
     const ch = supabase
       .channel("public-map")
       .on("postgres_changes", { event: "*", schema: "public", table: "live_positions" }, (payload) => {
@@ -109,6 +119,9 @@ function MapPage() {
       })
       .subscribe();
     return () => {
+      alive = false;
+      window.clearInterval(interval);
+      window.removeEventListener("focus", refreshRoutes);
       void supabase.removeChannel(ch);
     };
   }, []);

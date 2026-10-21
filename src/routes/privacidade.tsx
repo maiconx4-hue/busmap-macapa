@@ -8,6 +8,8 @@ export const Route = createFileRoute("/privacidade")({
       { name: "description", content: "Como o BusMap Macapá trata sua localização e seus dados." },
       { property: "og:title", content: "Privacidade — BusMap Macapá" },
       { property: "og:description", content: "Política de privacidade compatível com a LGPD." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: () => (
