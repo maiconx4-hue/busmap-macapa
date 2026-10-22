@@ -55,7 +55,11 @@ export const calculateAdminRoute = createServerFn({ method: "POST" })
     endpoint.pathname = `${endpoint.pathname.replace(/\/$/, "")}/route/v1/driving/${coordinates}`;
     endpoint.search = "overview=full&geometries=geojson&steps=false";
     try {
-      const response = await fetch(endpoint, { signal: AbortSignal.timeout(15000) });
+      // The public OSRM demo rejects requests without an identifying User-Agent (403 from worker runtimes).
+      const response = await fetch(endpoint, {
+        signal: AbortSignal.timeout(15000),
+        headers: { "User-Agent": "BusMapMacapa/1.0 (https://busmap-macapa.lovable.app)", Accept: "application/json" },
+      });
       if (!response.ok) throw new Error("routing_unavailable");
       const result = z.object({ code: z.string(), routes: z.array(z.object({ geometry: z.object({ coordinates: z.array(z.tuple([z.number(), z.number()])) }) })).optional() }).parse(await response.json());
       const route = result.routes?.[0];
