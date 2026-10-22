@@ -1,9 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { Bus, Shield, User } from "lucide-react";
+import { Bus, Settings, User } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { Button } from "@/components/ui/button";
 
 export function AppHeader() {
-  const { user, isAdmin } = useAuth();
+  const { user } = useAuth();
   return (
     <header className="z-[1000] flex h-14 shrink-0 items-center justify-between gap-2 border-b border-border bg-primary px-3 text-primary-foreground md:px-5">
       <Link to="/" className="flex items-center gap-2">
@@ -18,11 +19,11 @@ export function AppHeader() {
         <Link to="/privacidade" className="hidden rounded-md px-3 py-1.5 opacity-80 hover:opacity-100 sm:inline">
           Privacidade
         </Link>
-        {isAdmin && (
-          <Link to="/admin" className="flex items-center gap-1 rounded-md px-3 py-1.5 opacity-90 hover:opacity-100">
-            <Shield className="h-4 w-4" /> <span className="hidden sm:inline">Admin</span>
+        <Button asChild variant="ghost" size="icon" className="hover:bg-primary-foreground/10 hover:text-primary-foreground">
+          <Link to="/admin" aria-label="Painel administrativo" title="Painel administrativo">
+            <Settings className="h-4 w-4" />
           </Link>
-        )}
+        </Button>
         <Link
           to={user ? "/perfil" : "/auth"}
           className="flex items-center gap-1.5 rounded-md bg-primary-foreground/10 px-3 py-1.5 font-medium hover:bg-primary-foreground/20"

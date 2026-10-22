@@ -495,6 +495,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_email_eligible: {
+        Args: { _confirmed_at: string; _email: string }
+        Returns: boolean
+      }
       admin_stats: { Args: never; Returns: Json }
       claim_device: { Args: { _device_secret: string }; Returns: Json }
       cleanup_stale: { Args: never; Returns: undefined }

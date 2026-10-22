@@ -1,4 +1,5 @@
 - [x] Implementar editor de rotas com cálculo OSRM e desenho manual.
+- [ ] Restringir administração ao e-mail confirmado do proprietário e adicionar engrenagem na página inicial.
 - [x] Proteger operações administrativas e manter rascunhos privados.
 - [x] Verificar testes de pontos, serviço OSRM, regras existentes no banco e bloqueio de visitantes.
 - [ ] Verificar edição, salvamento, prévia e publicação com sessão administrativa real — bloqueado: não há contas cadastradas nem administradores.

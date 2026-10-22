@@ -35,7 +35,8 @@ function AuthPage() {
       if (mode === "in") {
         const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
         if (error) throw error;
-        nav({ to: "/perfil" });
+        const { data: isAdmin } = await supabase.rpc("is_admin");
+        nav({ to: isAdmin === true ? "/admin" : "/perfil" });
       } else if (mode === "up") {
         const { error } = await supabase.auth.signUp({ email, password: pw, options: { emailRedirectTo: window.location.origin } });
         if (error) throw error;
