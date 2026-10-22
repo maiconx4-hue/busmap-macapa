@@ -8,6 +8,20 @@
       "when": 1792454763633,
       "tag": "0000_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792634892796,
+      "tag": "0001_exclusive_verified_admin_email",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792634924526,
+      "tag": "0002_allow_pure_admin_eligibility_check",
+      "breakpoints": true
     }
   ]
 }
