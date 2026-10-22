@@ -1,0 +1,2 @@
+-- This pure predicate reads no user data and grants no privileges; is_admin still validates Auth identity and the protected role row.
+grant execute on function public.admin_email_eligible(text, timestamptz) to public;
