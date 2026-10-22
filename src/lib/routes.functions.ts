@@ -55,7 +55,11 @@ export const calculateAdminRoute = createServerFn({ method: "POST" })
     endpoint.pathname = `${endpoint.pathname.replace(/\/$/, "")}/route/v1/driving/${coordinates}`;
     endpoint.search = "overview=full&geometries=geojson&steps=false";
     try {
-      const response = await fetch(endpoint, { signal: AbortSignal.timeout(15000) });
+      // The public OSRM demo rejects requests without an identifying User-Agent (403 from worker runtimes).
+      const response = await fetch(endpoint, {
+        signal: AbortSignal.timeout(15000),
+        headers: { "User-Agent": "BusMapMacapa/1.0 (https://busmap-macapa.lovable.app)", Accept: "application/json" },
+      });
       if (!response.ok) throw new Error("routing_unavailable");
       const result = z.object({ code: z.string(), routes: z.array(z.object({ geometry: z.object({ coordinates: z.array(z.tuple([z.number(), z.number()])) }) })).optional() }).parse(await response.json());
       const route = result.routes?.[0];
@@ -63,7 +67,8 @@ export const calculateAdminRoute = createServerFn({ method: "POST" })
       const geometry: LatLng[] = route.geometry.coordinates.map(([lng, lat]) => [lat, lng]);
       z.array(coordinateSchema).min(2).max(10000).parse(geometry);
       return { geometry, error: null };
-    } catch {
+    } catch (error) {
+      console.error("routing_failed", error instanceof Error ? `${error.name}: ${error.message}` : String(error));
       return { geometry: null, error: "O serviço de roteamento está indisponível. Tente novamente ou use o desenho manual." };
     }
   });
