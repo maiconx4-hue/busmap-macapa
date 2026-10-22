@@ -63,7 +63,8 @@ export const calculateAdminRoute = createServerFn({ method: "POST" })
       const geometry: LatLng[] = route.geometry.coordinates.map(([lng, lat]) => [lat, lng]);
       z.array(coordinateSchema).min(2).max(10000).parse(geometry);
       return { geometry, error: null };
-    } catch {
+    } catch (error) {
+      console.error("routing_failed", error instanceof Error ? `${error.name}: ${error.message}` : String(error));
       return { geometry: null, error: "O serviço de roteamento está indisponível. Tente novamente ou use o desenho manual." };
     }
   });
